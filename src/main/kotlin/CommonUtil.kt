@@ -1,10 +1,8 @@
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil.NULL
-import start_1.HelloWindow_3
 
 object CommonUtil {
     fun commonLoop(
@@ -24,7 +22,7 @@ object CommonUtil {
 
             fnLoop()
 
-            glfwSwapBuffers(HelloWindow_3.window)
+            glfwSwapBuffers(window)
             glfwPollEvents()
         }
     }
@@ -41,13 +39,14 @@ object CommonUtil {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
         if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE)
+            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
         }
 
         val window = glfwCreateWindow(width, height, "LWJGL test", NULL, NULL)
         if (window == NULL)
             throw RuntimeException("Cannot create window")
         glfwMakeContextCurrent(window)
+        GL.createCapabilities()
 
         return window
     }
@@ -58,5 +57,10 @@ object CommonUtil {
             ?.buffered()
             ?.readAllBytes()
             ?.decodeToString()
+    }
+
+    enum class TypeSize(val size: Int) {
+        FLOAT(4),
+        DOUBLE(8)
     }
 }
