@@ -10,6 +10,7 @@ interface IShader {
     var programRef: ProgramRef
     var buffers: Array<InitBufferResult>
     var shaders: Array<ShaderRef>
+    var indices: TMaybe<IntArray>
     fun loadShaders(vararg files: ShaderFileSrc)
     fun initBuffers()
     fun cleanUp()
