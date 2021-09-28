@@ -32,10 +32,10 @@ data class ShaderRef(
     val fragment: Int,
 )
 
-fun IShader.getVertexShaderContent(filename: String): String? {
+fun getVertexShaderContent(filename: String): String? {
     return CommonUtil.getShaderFileContent(if (filename.endsWith(".vert")) filename else "$filename.vert")
 }
 
-fun IShader.getFragmentShaderContent(filename: String): String? {
+fun getFragmentShaderContent(filename: String): String? {
     return CommonUtil.getShaderFileContent(if (filename.endsWith(".frag")) filename else "$filename.frag")
 }
