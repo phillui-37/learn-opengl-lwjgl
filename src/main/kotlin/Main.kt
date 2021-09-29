@@ -1,5 +1,5 @@
-import commonInterface.ILesson
-import commonInterface.IShader
+import common.trait.ILesson
+import common.trait.IShader
 import org.lwjgl.Version
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*

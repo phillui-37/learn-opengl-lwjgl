@@ -1,11 +1,11 @@
-import commonInterface.InitBufferResult
-import commonInterface.getFragmentShaderContent
-import commonInterface.getVertexShaderContent
+package common
+
+import common.trait.InitBufferResult
+import common.trait.getFragmentShaderContent
+import common.trait.getVertexShaderContent
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.glDeleteVertexArrays
@@ -89,7 +89,7 @@ object CommonUtil {
         glShaderSource(fragShader, shaderContent)
         glCompileShader(fragShader)
         val success = IntArray(1)
-        GL30.glGetShaderiv(fragShader, GL_COMPILE_STATUS, success)
+        glGetShaderiv(fragShader, GL_COMPILE_STATUS, success)
         if (success[0] != GL_TRUE)
             throw RuntimeException("FRAGMENT_SHADER::COMPILE::FAIL")
         return fragShader

@@ -1,7 +1,7 @@
 package start_1
 
-import CommonUtil
-import commonInterface.ILesson
+import common.CommonUtil
+import common.trait.ILesson
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWKeyCallbackI

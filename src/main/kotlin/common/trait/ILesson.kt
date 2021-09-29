@@ -1,4 +1,4 @@
-package commonInterface
+package common.trait
 
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWKeyCallbackI

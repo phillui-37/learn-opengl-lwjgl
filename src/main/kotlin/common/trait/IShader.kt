@@ -1,6 +1,6 @@
-package commonInterface
+package common.trait
 
-import CommonUtil
+import common.CommonUtil
 import fp.TMaybe
 
 typealias ProgramRef = Int
@@ -11,7 +11,6 @@ interface IShader {
     var buffers: Array<InitBufferResult>
     var shaders: Array<ShaderRef>
     var indices: TMaybe<IntArray>
-    fun loadShaders(vararg files: ShaderFileSrc)
     fun initBuffers()
     fun cleanUp()
 }

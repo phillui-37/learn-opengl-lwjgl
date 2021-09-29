@@ -1,4 +1,4 @@
-package commonInterface
+package common
 
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI

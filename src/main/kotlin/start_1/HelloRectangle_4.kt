@@ -1,7 +1,7 @@
 package start_1
 
-import CommonUtil
-import commonInterface.*
+import common.CommonUtil
+import common.trait.*
 import fp.TMaybe
 import fp.TMaybe.Companion.maybe
 import org.lwjgl.glfw.GLFW
@@ -63,7 +63,7 @@ object HelloRectangle_4: IShader, ILesson {
         1,2,3
     ).maybe()
 
-    override fun loadShaders(vararg files: ShaderFileSrc) {
+    private fun loadShaders(vararg files: ShaderFileSrc) {
         val vertShader = glCreateShader(GL_VERTEX_SHADER)
         var shaderContent = getVertexShaderContent(files[0].vertex) ?: throw RuntimeException("vertex shader not found")
         glShaderSource(vertShader, shaderContent)
