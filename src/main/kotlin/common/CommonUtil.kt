@@ -37,6 +37,13 @@ object CommonUtil {
         }
     }
 
+    fun commonLoop(
+        window: Long,
+        fnLoop: () -> Unit
+    ) {
+        commonLoop(window, {}, fnLoop)
+    }
+
     fun commonInit(
         width: Int,
         height: Int,
