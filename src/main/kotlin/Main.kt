@@ -3,22 +3,22 @@ import common.trait.IShader
 import org.lwjgl.Version
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
-import start_1.ColorTriangle_5
-import start_1.HelloRectangle_4
-import start_1.HelloTriangle_4
-import start_1.HelloWindow_3
+import org.lwjgl.opengl.GL
+import org.lwjgl.opengl.GLUtil
+import start_1.*
 
 enum class Lesson(val lesson: ILesson) {
     // Getting started
     HELLO_WINDOW(HelloWindow_3),
     HELLO_TRIANGLE(HelloTriangle_4),
     HELLO_RECTANGLE(HelloRectangle_4),
-    COLOR_TRIANGLE(ColorTriangle_5)
+    COLOR_TRIANGLE(ColorTriangle_5),
+    TEXTURE(Texture_6),
 }
 
 fun main() {
-    println("LWJGL ${Version.getVersion()}")
-    val lesson = Lesson.COLOR_TRIANGLE.lesson
+    println("LWJGL ${Version.getVersion()}\nDir: ${System.getProperty("user.dir")}")
+    val lesson = Lesson.TEXTURE.lesson
 
     lesson.init()
     lesson.loop()

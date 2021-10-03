@@ -3,13 +3,16 @@ package common
 import common.trait.InitBufferResult
 import common.trait.getFragmentShaderContent
 import common.trait.getVertexShaderContent
+import fp.tryNotNull
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.glDeleteVertexArrays
+import org.lwjgl.opengl.GLUtil
 import org.lwjgl.system.MemoryUtil.NULL
+import java.nio.ByteBuffer
 
 object CommonUtil {
     fun commonLoop(
@@ -54,6 +57,7 @@ object CommonUtil {
             throw RuntimeException("Cannot create window")
         glfwMakeContextCurrent(window)
         GL.createCapabilities()
+        GLUtil.setupDebugMessageCallback(System.err)
 
         return window
     }
@@ -64,6 +68,15 @@ object CommonUtil {
             ?.buffered()
             ?.readAllBytes()
             ?.decodeToString()
+    }
+
+    fun getTextureFileContent(filename: String): ByteBuffer? {
+        val data = javaClass.classLoader
+            ?.getResourceAsStream("texture/$filename")
+            ?.buffered()
+            ?.readAllBytes()
+        return data?.let(ByteBuffer::wrap)
+
     }
 
     enum class TypeSize(val size: Int) {
