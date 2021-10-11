@@ -1,6 +1,7 @@
 package common.trait
 
 import common.CommonUtil
+import common.Shader
 import fp.TMaybe
 
 typealias ProgramRef = Int
@@ -37,4 +38,8 @@ fun getVertexShaderContent(filename: String): String? {
 
 fun getFragmentShaderContent(filename: String): String? {
     return CommonUtil.getShaderFileContent(if (filename.endsWith(".frag")) filename else "$filename.frag")
+}
+
+interface IShader2: IShader {
+    var shader: Shader
 }

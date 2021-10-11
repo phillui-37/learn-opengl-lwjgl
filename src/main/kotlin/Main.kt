@@ -13,12 +13,13 @@ enum class Lesson(val lesson: ILesson) {
     COLOR_TRIANGLE(ColorTriangle_5),
     TEXTURE(Texture_6),
     TEXTURE2(Texture2_6),
-    TRANSFORMATION(Transformation_7)
+    TRANSFORMATION(Transformation_7),
+    COORDINATE(Coordinate_8),
 }
 
 fun main() {
     println("LWJGL ${Version.getVersion()}\nDir: ${System.getProperty("user.dir")}")
-    val lesson = Lesson.TRANSFORMATION.lesson
+    val lesson = Lesson.COORDINATE.lesson
 
     lesson.init()
     lesson.loop()
