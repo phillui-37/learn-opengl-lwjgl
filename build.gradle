@@ -63,3 +63,7 @@ compileTestKotlin {
 }
 
 mainClassName = "MainKt"
+
+tasks.withType(JavaCompile) {
+    options.incremental = true
+}
