@@ -16,11 +16,12 @@ enum class Lesson(val lesson: ILesson) {
     TRANSFORMATION(Transformation_7),
     COORDINATE(Coordinate_8),
     CAMERA1(Camera_9),
+    CAMERA2(Camera_Keyboard_9),
 }
 
 fun main() {
     println("LWJGL ${Version.getVersion()}\nDir: ${System.getProperty("user.dir")}")
-    val lesson = Lesson.COORDINATE.lesson
+    val lesson = Lesson.CAMERA2.lesson
 
     lesson.init()
     lesson.loop()

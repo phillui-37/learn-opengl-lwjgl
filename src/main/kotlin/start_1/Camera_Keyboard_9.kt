@@ -8,11 +8,15 @@ import fp.TMaybe
 import fp.TMaybe.Companion.maybe
 import fp.TNone
 import org.joml.Math
+import org.joml.Math.*
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW
-import org.lwjgl.glfw.GLFW.glfwGetTime
+import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWCursorPosCallbackI
+import org.lwjgl.glfw.GLFWKeyCallbackI
+import org.lwjgl.glfw.GLFWScrollCallbackI
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.GL_DEPTH_TEST
 import org.lwjgl.opengl.GL11.glEnable
@@ -21,20 +25,64 @@ import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL30
 import org.lwjgl.stb.STBImage
 import org.lwjgl.system.MemoryUtil.NULL
-import kotlin.math.cos
-import kotlin.math.sin
 
-object Camera_9: IShader2, ILesson, ITexture {
+object Camera_Keyboard_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
-    override val keyCb = DefaultValue.KEYBOARD_CALLBACK
+    override val keyCb = GLFWKeyCallbackI { window, key, scancode, action, mods ->
+        val cameraSpeed = 250f * deltaTime
+
+        when (key) {
+            GLFW_KEY_ESCAPE -> glfwSetWindowShouldClose(window, true)
+            GLFW_KEY_W -> cameraPos.add(cameraFront.mul(cameraSpeed, Vector3f()))
+            GLFW_KEY_S -> cameraPos.sub(cameraFront.mul(cameraSpeed, Vector3f()))
+            GLFW_KEY_A -> cameraPos.sub(
+                cameraFront.cross(cameraUp, Vector3f()).normalize(Vector3f()).mul(cameraSpeed, Vector3f())
+            )
+            GLFW_KEY_D -> cameraPos.add(
+                cameraFront.cross(cameraUp, Vector3f()).normalize(Vector3f()).mul(cameraSpeed, Vector3f())
+            )
+        }
+    }
     override val frameBufferSizeCb = DefaultValue.FRAME_BUFFER_SIZE_CALLBACK
     override var window: Long = NULL
+    val cameraPos = Vector3f(0f, 0f, 3f)
+    val cameraFront = Vector3f(0f, 0f, -1f)
+    val cameraUp = Vector3f(0f, 1f, 0f)
+    var deltaTime = 0f
+    var lastFrame = 0f
+
+    /**
+     * yaw: (rotate on y axis)
+     * z
+     * ^
+     * |
+     * +-> x
+     *
+     * => z = sin yaw, x = cos yaw
+     *
+     * pitch: (rotate on x axis)
+     * y
+     * ^
+     * |
+     * +-> x/z(plane)
+     *
+     * roll (rotate on z axis)
+     */
+    var firstMouse = true
+    var yaw = -90f
+    var pitch = 0f
+    var lastX = width/2f
+    var lastY = height/2f
+    var fov = 45f
 
     override fun init() {
         window = CommonUtil.commonInit(width, height)
         GLFW.glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
         GLFW.glfwSetKeyCallback(window, keyCb)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
+        glfwSetCursorPosCallback(window, mouseCallback)
+        glfwSetScrollCallback(window, scrollCb)
 
         shader = Shader("start_1/camera", "start_1/camera")
         initBuffers()
@@ -50,10 +98,12 @@ object Camera_9: IShader2, ILesson, ITexture {
     }
 
     override fun loop() {
-        val projection = Matrix4f()
-            .perspective(Math.toRadians(45f), width.toFloat()/ height.toFloat(), .1f, 100f)
-        shader.setMat4("projection", projection)
+
         while (!GLFW.glfwWindowShouldClose(window)) {
+            val currentFrame = glfwGetTime().toFloat()
+            deltaTime = currentFrame - lastFrame
+            lastFrame = currentFrame
+
             GL30.glClearColor(.2f, .3f, .3f, 1f)
             GL20.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT) // clear the framebuffer
 
@@ -64,7 +114,10 @@ object Camera_9: IShader2, ILesson, ITexture {
             GL30.glBindTexture(GL30.GL_TEXTURE_2D, textures[1])
 
             shader.use()
-            val radius = 10f
+
+            val projection = Matrix4f()
+                .perspective(Math.toRadians(fov), width.toFloat() / height.toFloat(), .1f, 100f)
+            shader.setMat4("projection", projection)
 
             /**
              * look at Matrix
@@ -81,11 +134,7 @@ object Camera_9: IShader2, ILesson, ITexture {
              * cal flow: P -> D -> R -> U
              */
             val viewM = Matrix4f()
-                .lookAt(
-                    Vector3f(sin(glfwGetTime()).toFloat() * radius, 0f, cos(glfwGetTime()).toFloat() * radius),
-                    Vector3f(0f,0f,0f),
-                    Vector3f(0f,1f,0f)
-                )
+                .lookAt(cameraPos, cameraPos.add(cameraFront, Vector3f()), cameraUp)
             shader.setMat4("view", viewM)
 
             buffers[0].VAO.consume(GL30::glBindVertexArray)
@@ -105,64 +154,64 @@ object Camera_9: IShader2, ILesson, ITexture {
 
     override lateinit var shader: Shader
     override val vertices = floatArrayOf(
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
     )
     override var programRef: ProgramRef = 0
     override var buffers: Array<InitBufferResult> = arrayOf()
     override var shaders: Array<ShaderRef> = arrayOf()
     override var indices: TMaybe<IntArray> = TNone()
-    
+
     private val cubePositions = arrayOf(
-        Vector3f( 0.0f,  0.0f,  0.0f),
-        Vector3f( 2.0f,  5.0f, -15.0f),
+        Vector3f(0.0f, 0.0f, 0.0f),
+        Vector3f(2.0f, 5.0f, -15.0f),
         Vector3f(-1.5f, -2.2f, -2.5f),
         Vector3f(-3.8f, -2.0f, -12.3f),
-        Vector3f (2.4f, -0.4f, -3.5f),
-        Vector3f(-1.7f,  3.0f, -7.5f),
-        Vector3f( 1.3f, -2.0f, -2.5f),
-        Vector3f( 1.5f,  2.0f, -2.5f),
-        Vector3f( 1.5f,  0.2f, -1.5f),
-        Vector3f(-1.3f,  1.0f, -1.5f)
+        Vector3f(2.4f, -0.4f, -3.5f),
+        Vector3f(-1.7f, 3.0f, -7.5f),
+        Vector3f(1.3f, -2.0f, -2.5f),
+        Vector3f(1.5f, 2.0f, -2.5f),
+        Vector3f(1.5f, 0.2f, -1.5f),
+        Vector3f(-1.3f, 1.0f, -1.5f)
     )
 
     override fun initBuffers() {
@@ -256,4 +305,36 @@ object Camera_9: IShader2, ILesson, ITexture {
     }
 
     override lateinit var textures: IntArray
+    override val mouseCallback = GLFWCursorPosCallbackI { window, xpos, ypos ->
+        if (firstMouse) {
+            lastX = xpos.toFloat()
+            lastY = ypos.toFloat()
+            firstMouse = false
+        }
+
+        var xoffset = xpos - lastX
+        var yoffset = lastY - ypos // y coor go from bot to top
+        lastX = xpos.toFloat()
+        lastY = ypos.toFloat()
+
+        val sensitivity = .1f
+        xoffset *= sensitivity
+        yoffset *= sensitivity
+
+        yaw += xoffset.toFloat()
+        pitch += yoffset.toFloat()
+        pitch = min(89f, pitch)
+        pitch = max(-89f, pitch)
+
+        cameraFront.set(Vector3f(
+            cos(toRadians(yaw)) * cos(toRadians(pitch)),
+            sin(toRadians(pitch)),
+            sin(toRadians(yaw)) * cos(toRadians(pitch))
+        ).normalize())
+    }
+    override val scrollCb = GLFWScrollCallbackI {window, xoffset, yoffset ->
+        fov -= yoffset.toFloat()
+        fov = max(1f, fov)
+        fov = min(45f, fov)
+    }
 }
