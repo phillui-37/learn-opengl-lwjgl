@@ -5,7 +5,7 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 
 enum class CameraMovement {
-    FORWARD, BACKWARD, LEFT, RIGHT
+    FORWARD, BACKWARD, LEFT, RIGHT, STAY
 }
 
 class Camera {
@@ -30,6 +30,23 @@ class Camera {
 
     /**
      * using Euler angle
+     */
+    /**
+     * yaw: (rotate on y axis)
+     * z
+     * ^
+     * |
+     * +-> x
+     *
+     * => z = sin yaw, x = cos yaw
+     *
+     * pitch: (rotate on x axis)
+     * y
+     * ^
+     * |
+     * +-> x/z(plane)
+     *
+     * roll (rotate on z axis)
      */
     var yaw: Float
         private set
@@ -66,6 +83,19 @@ class Camera {
             CameraMovement.BACKWARD -> position.sub(front.mul(velocity, Vector3f()))
             CameraMovement.LEFT -> position.sub(right.mul(velocity, Vector3f()))
             CameraMovement.RIGHT -> position.add(right.mul(velocity, Vector3f()))
+            else -> {}
+        }
+    }
+
+    fun processKeyboardFPS(direction: CameraMovement, deltaTime: Float) {
+        val velocity = movementSpeed * deltaTime
+        fun Vector3f.setYTo0() = set(x, 0f, z)
+        when (direction) {
+            CameraMovement.FORWARD -> position.add(front.mul(velocity, Vector3f()).setYTo0())
+            CameraMovement.BACKWARD -> position.sub(front.mul(velocity, Vector3f()).setYTo0())
+            CameraMovement.LEFT -> position.sub(right.mul(velocity, Vector3f()).setYTo0())
+            CameraMovement.RIGHT -> position.add(right.mul(velocity, Vector3f()).setYTo0())
+            else -> {}
         }
     }
 
@@ -90,7 +120,7 @@ class Camera {
             sin(toRadians(pitch)),
             sin(toRadians(yaw)) * cos(toRadians(pitch))
         ).normalize()
-        right = front.cross(worldUp, Vector3f()).normalize(Vector3f())
-        up = right.cross(right, Vector3f()).normalize(Vector3f())
+        right = front.cross(worldUp, Vector3f()).normalize()
+        up = right.cross(front, Vector3f()).normalize()
     }
 }
