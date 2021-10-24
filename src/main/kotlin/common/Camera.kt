@@ -15,6 +15,22 @@ class Camera {
         private const val SPEED = 250f
         private const val SENSITIVITY = .1f
         private const val ZOOM = 45f
+
+        private fun customLookAt(
+            pos: Vector3f,
+            target: Vector3f,
+            up: Vector3f
+        ): Matrix4f {
+            val direction = pos.sub(target, Vector3f()).normalize() //z
+            val right = up.normalize(Vector3f()).cross(direction).normalize()//x
+            val camUp = direction.cross(right, Vector3f())//y
+            return Matrix4f(
+                right.x, camUp.x, direction.x, 0f, // col 0
+                right.y, camUp.y, direction.y, 0f, // col 1
+                right.z, camUp.z, direction.z, 0f, // col 2
+                -(right.x * pos.x + right.y * pos.y + right.z * pos.z),-(camUp.x*pos.x + camUp.y*pos.y + camUp.z*pos.z),-(direction.x*pos.x+direction.y+pos.y+direction.z*pos.z),1f // col3
+            )
+        }
     }
 
     var position: Vector3f
@@ -74,7 +90,8 @@ class Camera {
     constructor(posX: Float, posY: Float, posZ: Float, upX: Float, upY: Float, upZ: Float, yaw: Float, pitch: Float): this(Vector3f(posX, posY, posZ), Vector3f(upX, upY,upZ), yaw, pitch)
 
 
-    fun getViewMatrix() = Matrix4f().lookAt(position, position.add(front, Vector3f()), up)
+    fun getViewMatrix() = Matrix4f().lookAt(position, position.add(front, Vector3f()), worldUp)
+    fun getViewMatrixCameraEx() = customLookAt(position, position.add(front, Vector3f()), worldUp)
 
     fun processKeyboard(direction: CameraMovement, deltaTime: Float) {
         val velocity = movementSpeed * deltaTime

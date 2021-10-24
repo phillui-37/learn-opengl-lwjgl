@@ -26,7 +26,7 @@ import org.lwjgl.opengl.GL30
 import org.lwjgl.stb.STBImage
 import org.lwjgl.system.MemoryUtil.NULL
 
-object Camera_Keyboard_Ex_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
+object Camera_Keyboard_Ex_9 : IShader2, ILesson, ITexture, IMouseCb, IScrollCb {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
     override val keyCb = GLFWKeyCallbackI { window, key, scancode, action, mods ->
@@ -51,9 +51,9 @@ object Camera_Keyboard_Ex_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
     var deltaTime = 0f
 
     var firstMouse = true
-    var lastX = width/2f
-    var lastY = height/2f
-    val camera = Camera(Vector3f(0f,0f,3f))
+    var lastX = width / 2f
+    var lastY = height / 2f
+    val camera = Camera(Vector3f(0f, 0f, 3f))
 
     override fun init() {
         window = CommonUtil.commonInit(width, height)
@@ -112,8 +112,7 @@ object Camera_Keyboard_Ex_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
              *
              * cal flow: P -> D -> R -> U
              */
-            val viewM = customLookAt(camera.position, camera.position.add(camera.front, Vector3f()), camera.up)
-            // should be ok... don't know why it's fail
+            val viewM = camera.getViewMatrixCameraEx()
             shader.setMat4("view", viewM)
 
             buffers[0].VAO.consume(GL30::glBindVertexArray)
@@ -298,29 +297,7 @@ object Camera_Keyboard_Ex_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
 
         camera.processMouseMovement(xoffset.toFloat(), yoffset.toFloat())
     }
-    override val scrollCb = GLFWScrollCallbackI {window, xoffset, yoffset ->
+    override val scrollCb = GLFWScrollCallbackI { window, xoffset, yoffset ->
         camera.processMouseScroll(yoffset.toFloat())
-    }
-
-    private fun customLookAt(
-        pos: Vector3f,
-        target: Vector3f,
-        up: Vector3f
-    ): Matrix4f {
-        val direction = pos.sub(target, Vector3f()).normalize() //z
-        val right = up.normalize(Vector3f()).cross(direction).normalize()//x
-        val camUp = direction.cross(right, Vector3f())//y
-        val lookAtM = Matrix4f(
-            Vector4f(right, 0f),
-            Vector4f(camUp, 0f),
-            Vector4f(direction, 0f),
-            Vector4f(0f,0f,0f,1f)
-        ).mul(Matrix4f(
-            1f,0f,0f,-pos.x,
-            0f,1f,0f,-pos.y,
-            0f,0f,1f,-pos.z,
-            0f,0f,0f,1f
-        ))
-        return lookAtM
     }
 }
