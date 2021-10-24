@@ -10,6 +10,7 @@ import fp.TNone
 import org.joml.Math
 import org.joml.Matrix4f
 import org.joml.Vector3f
+import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWKeyCallbackI
@@ -48,7 +49,6 @@ object Coordinate_8 : IShader2, ILesson, ITexture {
         GLFW.glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
         GLFW.glfwSetKeyCallback(window, keyCb)
 
-        GL11.glEnable(GL11.GL_DEPTH_TEST)
 
         shader = Shader("start_1/coor")
         initBuffers()
@@ -58,6 +58,7 @@ object Coordinate_8 : IShader2, ILesson, ITexture {
         shader.use()
         shader.setInt("texture1", 0)
         shader.setInt("texture2", 1)
+        GL11.glEnable(GL11.GL_DEPTH_TEST)
 
 
         GLFW.glfwShowWindow(window)
@@ -196,14 +197,16 @@ object Coordinate_8 : IShader2, ILesson, ITexture {
     override var indices: TMaybe<IntArray> = TNone()
 
     override fun initBuffers() {
-        val VAO = IntArray(1)
-        val VBO = IntArray(1)
+        val VAO = BufferUtils.createIntBuffer(1)
+        val VBO = BufferUtils.createIntBuffer(1)
         GL30.glGenVertexArrays(VAO)
         GL30.glGenBuffers(VBO)
 
-        GL30.glBindVertexArray(VAO[0])
+        val vaoVal = VAO.get()
+        val vboVal = VBO.get()
+        GL30.glBindVertexArray(vaoVal)
 
-        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, VBO[0])
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboVal)
         GL30.glBufferData(GL30.GL_ARRAY_BUFFER, vertices, GL30.GL_STATIC_DRAW)
 
         // position
@@ -222,8 +225,8 @@ object Coordinate_8 : IShader2, ILesson, ITexture {
 
         buffers = arrayOf(
             InitBufferResult(
-                VBO[0].maybe(),
-                VAO[0].maybe(),
+                vboVal.maybe(),
+                vaoVal.maybe(),
                 TNone()
             )
         )

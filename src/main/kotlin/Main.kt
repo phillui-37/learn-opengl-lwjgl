@@ -15,6 +15,7 @@ enum class Lesson(val lesson: ILesson) {
     TEXTURE2(Texture2_6),
     TRANSFORMATION(Transformation_7),
     COORDINATE(Coordinate_8),
+    CAMERA1(Camera_9),
 }
 
 fun main() {
