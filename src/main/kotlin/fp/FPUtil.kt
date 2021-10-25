@@ -68,19 +68,59 @@ infix fun <A> Comparable<A>.lt(other: A) = this < other
 inline fun <reified A, reified B, reified C> curry2(crossinline fn: (A, B) -> C) =
     { a: A -> { b: B -> fn(a, b) } }
 
+inline fun <reified A, reified B, reified C> curry2(crossinline fn: (A, B) -> C, a: A) = curry2(fn)(a)
+
 inline fun <reified A, reified B, reified C, reified D> curry3(crossinline fn: (A, B, C) -> D) =
     { a: A -> curry2 { b: B, c: C -> fn(a, b, c) } }
+inline fun <reified A, reified B, reified C, reified D> curry3(crossinline fn: (A, B, C) -> D, a: A) = curry3(fn)(a)
+inline fun <reified A, reified B, reified C, reified D> curry3(crossinline fn: (A, B, C) -> D, a: A, b: B) = curry3(fn)(a)(b)
 
 inline fun <reified A, reified B, reified C, reified D, reified E> curry4(crossinline fn: (A, B, C, D) -> E) =
     { a: A -> curry3 { b: B, c: C, d: D -> fn(a, b, c, d) } }
+inline fun <reified A, reified B, reified C, reified D, reified E> curry4(crossinline fn: (A, B, C, D) -> E, a: A) = curry4(fn)(a)
+inline fun <reified A, reified B, reified C, reified D, reified E> curry4(crossinline fn: (A, B, C, D) -> E, a: A, b: B) = curry4(fn)(a)(b)
+inline fun <reified A, reified B, reified C, reified D, reified E> curry4(crossinline fn: (A, B, C, D) -> E, a: A, b: B, c: C) = curry4(fn)(a)(b)(c)
 
 inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F) =
     { a: A -> curry4 { b: B, c: C, d: D, e: E -> fn(a, b, c, d, e) } }
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A) = curry5(fn)(a)
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A,b:B) = curry5(fn)(a)(b)
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A,b:B,c:C) = curry5(fn)(a)(b)(c)
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A,b:B,c:C,d:C) = curry5(fn)(a)(b)(c)(d)
 
 inline fun <reified A, reified B, reified C, reified D, reified E, reified F, reified G> curry6(
     crossinline fn: (A, B, C, D, E, F) -> G
-) =
-    { a: A -> curry5 { b: B, c: C, d: D, e: E, f: F -> fn(a, b, c, d, e, f) } }
+) = { a: A -> curry5 { b: B, c: C, d: D, e: E, f: F -> fn(a, b, c, d, e, f) } }
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F, reified G> curry6(
+    crossinline fn: (A, B, C, D, E, F) -> G,
+    a: A
+) = curry6(fn)(a)
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F, reified G> curry6(
+    crossinline fn: (A, B, C, D, E, F) -> G,
+    a: A,
+    b:B,
+) = curry6(fn)(a)(b)
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F, reified G> curry6(
+    crossinline fn: (A, B, C, D, E, F) -> G,
+    a: A,
+    b:B,
+    c:C,
+) = curry6(fn)(a)(b)(c)
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F, reified G> curry6(
+    crossinline fn: (A, B, C, D, E, F) -> G,
+    a: A,
+    b:B,
+    c:C,
+    d:D,
+) = curry6(fn)(a)(b)(c)(d)
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F, reified G> curry6(
+    crossinline fn: (A, B, C, D, E, F) -> G,
+    a: A,
+    b:B,
+    c:C,
+    d:D,
+    e:E,
+) = curry6(fn)(a)(b)(c)(d)(e)
 
 inline fun <reified A, reified B, reified C> uncurry2(crossinline fn: (A) -> (B) -> C) =
     { a: A, b: B -> fn(a)(b) }
