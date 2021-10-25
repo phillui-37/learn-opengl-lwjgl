@@ -86,7 +86,7 @@ inline fun <reified A, reified B, reified C, reified D, reified E, reified F> cu
 inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A) = curry5(fn)(a)
 inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A,b:B) = curry5(fn)(a)(b)
 inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A,b:B,c:C) = curry5(fn)(a)(b)(c)
-inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A,b:B,c:C,d:C) = curry5(fn)(a)(b)(c)(d)
+inline fun <reified A, reified B, reified C, reified D, reified E, reified F> curry5(crossinline fn: (A, B, C, D, E) -> F,a:A,b:B,c:C,d:D) = curry5(fn)(a)(b)(c)(d)
 
 inline fun <reified A, reified B, reified C, reified D, reified E, reified F, reified G> curry6(
     crossinline fn: (A, B, C, D, E, F) -> G
