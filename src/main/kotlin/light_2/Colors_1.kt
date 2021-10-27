@@ -6,8 +6,12 @@ import fp.*
 import org.lwjgl.glfw.*
 import org.lwjgl.opengl.*
 import org.lwjgl.system.MemoryUtil.NULL
+import org.joml.*
+import org.lwjgl.glfw.GLFW.*
 
 object Colors_1: IShader2, ILesson, ITexture, IMouseCb, IScrollCb {
+    override val width: Int = DefaultValue.WIDTH
+    override val height: Int = DefaultValue.HEIGHT
     var lastFrame = 0f
     var deltaTime = 0f
 
@@ -27,8 +31,6 @@ object Colors_1: IShader2, ILesson, ITexture, IMouseCb, IScrollCb {
     override fun cleanUp() {}
     override lateinit var shader: Shader
 
-    override val width: Int = DefaultValue.WIDTH
-    override val height: Int = DefaultValue.HEIGHT
     override val keyCb: GLFWKeyCallbackI = GLFWKeyCallbackI { window, key, scancode, action, mods ->
         val fn = curry2(camera::processKeyboardFPS) // ex1
         val fn2: (Float) -> Unit
