@@ -1,5 +1,8 @@
+import common.CommonUtil
+import common.Shader
 import common.trait.ILesson
 import common.trait.IShader
+import common.trait.IShader3
 import org.lwjgl.Version
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
@@ -24,6 +27,10 @@ fun main() {
     println("LWJGL ${Version.getVersion()}\nDir: ${System.getProperty("user.dir")}")
     val lesson = Lesson.CAMERA_EX.lesson
 
+    lesson.window = CommonUtil.commonInit(lesson.width, lesson.height)
+    if (lesson is IShader3) {
+        lesson.shader = Shader(lesson.vertexShaderPath, lesson.fragmentShaderPath)
+    }
     lesson.init()
     lesson.loop()
     if (lesson is IShader)

@@ -43,3 +43,8 @@ fun getFragmentShaderContent(filename: String): String? {
 interface IShader2: IShader {
     var shader: Shader
 }
+
+interface IShader3: IShader2 {
+    val fragmentShaderPath: String
+    val vertexShaderPath: String
+}
