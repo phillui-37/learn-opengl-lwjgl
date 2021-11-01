@@ -34,12 +34,11 @@ object Transformation_7: IShader, ILesson {
     private var textures = IntArray(2)
 
     override fun init() {
-        window = CommonUtil.commonInit(width, height)
         glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
         glfwSetKeyCallback(window, keyCb)
         
         shader = Shader("start_1/transformation", "start_1/transformation")
-        initBuffers()
+        buffers = initBuffers()
         
         getTexture()
         
@@ -122,7 +121,7 @@ object Transformation_7: IShader, ILesson {
         1, 2, 3
     ).maybe()
 
-    override fun initBuffers() {
+    override fun initBuffers(): Array<InitBufferResult> {
         val VAO = IntArray(1)
         val VBO = IntArray(1)
         val EBO = IntArray(1)
@@ -155,7 +154,7 @@ object Transformation_7: IShader, ILesson {
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glBindVertexArray(0)
 
-        buffers = arrayOf(
+        return arrayOf(
             InitBufferResult(
                 VBO[0].maybe(),
                 VAO[0].maybe(),

@@ -32,7 +32,7 @@ object HelloRectangle_4: IShader, ILesson {
         glfwSetKeyCallback(window, keyCb)
 
         loadShaders(ShaderFileSrc("start_1/rectangle", "start_1/rectangle"))
-        initBuffers()
+        buffers = initBuffers()
 
         glfwShowWindow(window)
     }
@@ -99,7 +99,7 @@ object HelloRectangle_4: IShader, ILesson {
         )
     }
 
-    override fun initBuffers() {
+    override fun initBuffers(): Array<InitBufferResult> {
         val VAO = IntArray(1)
         val VBO = IntArray(1)
         val EBO = IntArray(1)
@@ -123,7 +123,7 @@ object HelloRectangle_4: IShader, ILesson {
 //        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
-        buffers = arrayOf(
+        return arrayOf(
             InitBufferResult(
                 VBO[0].maybe(),
                 VAO[0].maybe(),

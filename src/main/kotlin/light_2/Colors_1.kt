@@ -27,7 +27,7 @@ object Colors_1: IShader2, ILesson, ITexture, IMouseCb, IScrollCb {
     override lateinit var buffers: Array<InitBufferResult>
     override lateinit var shaders: Array<ShaderRef>
     override var indices: TMaybe<IntArray> = TNone()
-    override fun initBuffers() {}
+    override fun initBuffers(): Array<InitBufferResult> = arrayOf()
     override fun cleanUp() {}
     override lateinit var shader: Shader
 
@@ -55,7 +55,7 @@ object Colors_1: IShader2, ILesson, ITexture, IMouseCb, IScrollCb {
     override fun loop() {
 
     }
-    override fun getTexture(): IntArray {}
+    override fun getTexture(): IntArray = intArrayOf()
     override lateinit var textures: IntArray
 
     override val mouseCallback = GLFWCursorPosCallbackI { window, xpos, ypos ->

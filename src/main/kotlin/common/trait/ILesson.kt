@@ -12,3 +12,7 @@ interface ILesson {
     fun init()
     fun loop()
 }
+
+interface ILessonPostInit {
+    fun postInit()
+}

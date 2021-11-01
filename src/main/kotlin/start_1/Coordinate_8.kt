@@ -21,7 +21,7 @@ import org.lwjgl.opengl.GL30
 import org.lwjgl.stb.STBImage
 import org.lwjgl.system.MemoryUtil.NULL
 
-object Coordinate_8 : IShader2, ILesson, ITexture {
+object Coordinate_8 : IShader3, ILessonPostInit, ILesson, ITexture {
     override val width: Int = DefaultValue.WIDTH
     override val height: Int = DefaultValue.HEIGHT
     override val keyCb: GLFWKeyCallbackI = DefaultValue.KEYBOARD_CALLBACK
@@ -44,22 +44,19 @@ object Coordinate_8 : IShader2, ILesson, ITexture {
         Vector3f(-1.3f, 1f, -1.5f)
     )
 
+    override val fragmentShaderPath = "start_1/coor"
+    override val vertexShaderPath = "start_1/coor"
+
     override fun init() {
-        window = CommonUtil.commonInit(width, height)
         GLFW.glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
         GLFW.glfwSetKeyCallback(window, keyCb)
+    }
 
-
-        shader = Shader("start_1/coor")
-        initBuffers()
-
-        textures = getTexture()
-
+    override fun postInit() {
         shader.use()
         shader.setInt("texture1", 0)
         shader.setInt("texture2", 1)
         GL11.glEnable(GL11.GL_DEPTH_TEST)
-
 
         GLFW.glfwShowWindow(window)
     }
@@ -196,7 +193,7 @@ object Coordinate_8 : IShader2, ILesson, ITexture {
     override var shaders: Array<ShaderRef> = arrayOf()
     override var indices: TMaybe<IntArray> = TNone()
 
-    override fun initBuffers() {
+    override fun initBuffers(): Array<InitBufferResult> {
         val VAO = BufferUtils.createIntBuffer(1)
         val VBO = BufferUtils.createIntBuffer(1)
         GL30.glGenVertexArrays(VAO)
@@ -223,7 +220,7 @@ object Coordinate_8 : IShader2, ILesson, ITexture {
         )
         GL30.glEnableVertexAttribArray(1)
 
-        buffers = arrayOf(
+        return arrayOf(
             InitBufferResult(
                 vboVal.maybe(),
                 vaoVal.maybe(),

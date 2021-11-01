@@ -32,13 +32,11 @@ object Texture2_6: IShader, ILesson {
     private var textures: IntArray = IntArray(2)
 
     override fun init() {
-        window = CommonUtil.commonInit(width, height)
-
         glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
         glfwSetKeyCallback(window, keyCb)
 
         shader = Shader("start_1/texture", "start_1/texture2")
-        initBuffers()
+        buffers = initBuffers()
 
         getTexture()
 
@@ -116,7 +114,7 @@ object Texture2_6: IShader, ILesson {
         1, 2, 3, // second triangle
     ).maybe()
 
-    override fun initBuffers() {
+    override fun initBuffers(): Array<InitBufferResult> {
         val VAO = IntArray(1)
         val VBO = IntArray(1)
         val EBO = IntArray(1)
@@ -159,7 +157,7 @@ object Texture2_6: IShader, ILesson {
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glBindVertexArray(0)
 
-        buffers = arrayOf(
+        return arrayOf(
             InitBufferResult(
                 VBO[0].maybe(),
                 VAO[0].maybe(),

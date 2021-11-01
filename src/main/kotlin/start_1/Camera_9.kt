@@ -24,7 +24,7 @@ import org.lwjgl.system.MemoryUtil.NULL
 import kotlin.math.cos
 import kotlin.math.sin
 
-object Camera_9: IShader2, ILesson, ITexture {
+object Camera_9: IShader3, ILesson, ITexture, ILessonPostInit {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
     override val keyCb = DefaultValue.KEYBOARD_CALLBACK
@@ -32,15 +32,11 @@ object Camera_9: IShader2, ILesson, ITexture {
     override var window: Long = NULL
 
     override fun init() {
-        window = CommonUtil.commonInit(width, height)
         GLFW.glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
         GLFW.glfwSetKeyCallback(window, keyCb)
+    }
 
-        shader = Shader("start_1/camera", "start_1/camera")
-        initBuffers()
-
-        textures = getTexture()
-
+    override fun postInit() {
         shader.use()
         shader.setInt("texture1", 0)
         shader.setInt("texture2", 1)
@@ -165,7 +161,7 @@ object Camera_9: IShader2, ILesson, ITexture {
         Vector3f(-1.3f,  1.0f, -1.5f)
     )
 
-    override fun initBuffers() {
+    override fun initBuffers():Array<InitBufferResult> {
         val VAO = BufferUtils.createIntBuffer(1)
         val VBO = BufferUtils.createIntBuffer(1)
         GL30.glGenVertexArrays(VAO)
@@ -193,7 +189,7 @@ object Camera_9: IShader2, ILesson, ITexture {
         )
         GL30.glEnableVertexAttribArray(1)
 
-        buffers = arrayOf(
+        return arrayOf(
             InitBufferResult(
                 vaoVal.maybe(),
                 vboVal.maybe(),
@@ -256,4 +252,6 @@ object Camera_9: IShader2, ILesson, ITexture {
     }
 
     override lateinit var textures: IntArray
+    override val fragmentShaderPath = "start_1/camera.frag"
+    override val vertexShaderPath = "start_1/camera.vert"
 }

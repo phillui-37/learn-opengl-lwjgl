@@ -24,7 +24,6 @@ object HelloWindow_3 : ILesson {
     }
 
     override fun init() {
-        window = CommonUtil.commonInit(width, height)
         glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
 
         glfwSetKeyCallback(window, keyCb)

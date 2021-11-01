@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL30.glBindVertexArray
 import org.lwjgl.opengl.GL30.glGenVertexArrays
 import org.lwjgl.system.MemoryUtil.NULL
 
-object ColorTriangle_5: IShader, ILesson {
+object ColorTriangle_5: IShader3, ILesson, ILessonPostInit {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
     override val keyCb = DefaultValue.KEYBOARD_CALLBACK
@@ -23,19 +23,13 @@ object ColorTriangle_5: IShader, ILesson {
     override val frameBufferSizeCb = DefaultValue.FRAME_BUFFER_SIZE_CALLBACK
     override var window: Long = NULL
 
-    private lateinit var shader: Shader
+    override lateinit var shader: Shader
 
+    override val fragmentShaderPath = "start_1/color_triangle"
+    override val vertexShaderPath = "start_1/color_triangle"
     override fun init() {
-        window = CommonUtil.commonInit(width, height)
-
         glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
         glfwSetKeyCallback(window, keyCb)
-
-//        loadShaders(ShaderFileSrc("start_1/color_triangle", "start_1/color_triangle"))
-        shader = Shader("start_1/color_triangle", "start_1/color_triangle")
-        initBuffers()
-
-        glfwShowWindow(window)
     }
 
     override fun loop() {
@@ -86,7 +80,7 @@ object ColorTriangle_5: IShader, ILesson {
         )
     }
 
-    override fun initBuffers() {
+    override fun initBuffers(): Array<InitBufferResult> {
         val VAO = IntArray(1)
         val VBO = IntArray(1)
         glGenVertexArrays(VAO)
@@ -104,7 +98,7 @@ object ColorTriangle_5: IShader, ILesson {
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glBindVertexArray(0)
 
-        buffers = arrayOf(
+        return arrayOf(
             InitBufferResult(
                 VBO[0].maybe(),
                 VAO[0].maybe(),
@@ -116,5 +110,9 @@ object ColorTriangle_5: IShader, ILesson {
     override fun cleanUp() {
         delBuffer(buffers)
         glDeleteProgram(programRef)
+    }
+
+    override fun postInit() {
+        glfwShowWindow(window)
     }
 }

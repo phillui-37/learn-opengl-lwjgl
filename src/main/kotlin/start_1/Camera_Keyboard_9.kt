@@ -26,7 +26,7 @@ import org.lwjgl.opengl.GL30
 import org.lwjgl.stb.STBImage
 import org.lwjgl.system.MemoryUtil.NULL
 
-object Camera_Keyboard_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
+object Camera_Keyboard_9 : IShader3, ILesson, ITexture, IMouseCb,IScrollCb,ILessonPostInit {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
     override val keyCb = GLFWKeyCallbackI { window, key, scancode, action, mods ->
@@ -77,24 +77,20 @@ object Camera_Keyboard_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
     var fov = 45f
 
     override fun init() {
-        window = CommonUtil.commonInit(width, height)
-        GLFW.glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
-        GLFW.glfwSetKeyCallback(window, keyCb)
+        glfwSetFramebufferSizeCallback(window, frameBufferSizeCb)
+        glfwSetKeyCallback(window, keyCb)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
         glfwSetCursorPosCallback(window, mouseCallback)
         glfwSetScrollCallback(window, scrollCb)
+    }
 
-        shader = Shader("start_1/camera", "start_1/camera")
-        initBuffers()
-
-        textures = getTexture()
-
+    override fun postInit() {
         shader.use()
         shader.setInt("texture1", 0)
         shader.setInt("texture2", 1)
         glEnable(GL_DEPTH_TEST)
 
-        GLFW.glfwShowWindow(window)
+        glfwShowWindow(window)
     }
 
     override fun loop() {
@@ -151,6 +147,9 @@ object Camera_Keyboard_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
             GLFW.glfwPollEvents()
         }
     }
+
+    override val fragmentShaderPath = "start_1/camera.frag"
+    override val vertexShaderPath = "start_1/camera.vert"
 
     override lateinit var shader: Shader
     override val vertices = floatArrayOf(
@@ -214,7 +213,7 @@ object Camera_Keyboard_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
         Vector3f(-1.3f, 1.0f, -1.5f)
     )
 
-    override fun initBuffers() {
+    override fun initBuffers(): Array<InitBufferResult> {
         val VAO = BufferUtils.createIntBuffer(1)
         val VBO = BufferUtils.createIntBuffer(1)
         GL30.glGenVertexArrays(VAO)
@@ -242,7 +241,7 @@ object Camera_Keyboard_9 : IShader2, ILesson, ITexture, IMouseCb,IScrollCb {
         )
         GL30.glEnableVertexAttribArray(1)
 
-        buffers = arrayOf(
+        return arrayOf(
             InitBufferResult(
                 vaoVal.maybe(),
                 vboVal.maybe(),

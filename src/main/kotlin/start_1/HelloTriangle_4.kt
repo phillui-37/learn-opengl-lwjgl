@@ -31,7 +31,7 @@ object HelloTriangle_4: IShader, ILesson {
         glfwSetKeyCallback(window, keyCb)
 
         loadShaders(ShaderFileSrc("start_1/triangle", "start_1/triangle"))
-        initBuffers()
+        buffers = initBuffers()
 
         glfwShowWindow(window)
     }
@@ -58,7 +58,7 @@ object HelloTriangle_4: IShader, ILesson {
     override var shaders: Array<ShaderRef> = emptyArray()
     override var indices: TMaybe<IntArray> = TNone()
 
-    override fun initBuffers() {
+    override fun initBuffers(): Array<InitBufferResult> {
         val VAO = IntArray(1)
         val VBO = IntArray(1)
         glGenVertexArrays(VAO)
@@ -72,7 +72,7 @@ object HelloTriangle_4: IShader, ILesson {
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glBindVertexArray(0)
 
-        buffers = arrayOf(
+        return arrayOf(
             InitBufferResult(
                 VBO[0].maybe(),
                 VAO[0].maybe(),
