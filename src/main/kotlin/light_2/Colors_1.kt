@@ -9,7 +9,7 @@ import org.lwjgl.system.MemoryUtil.NULL
 import org.joml.*
 import org.lwjgl.glfw.GLFW.*
 
-object Colors_1: IShader2, ILesson, ITexture, IMouseCb, IScrollCb {
+object Colors_1: IShader3, ILesson, ITexture, IMouseCb, IScrollCb, ILessonPostInit {
     override val width: Int = DefaultValue.WIDTH
     override val height: Int = DefaultValue.HEIGHT
     var lastFrame = 0f
@@ -29,6 +29,8 @@ object Colors_1: IShader2, ILesson, ITexture, IMouseCb, IScrollCb {
     override var indices: TMaybe<IntArray> = TNone()
     override fun initBuffers(): Array<InitBufferResult> = arrayOf()
     override fun cleanUp() {}
+    override val fragmentShaderPath: String = "light_2/colors"
+    override val vertexShaderPath: String = "light_2/colors"
     override lateinit var shader: Shader
 
     override val keyCb: GLFWKeyCallbackI = GLFWKeyCallbackI { window, key, scancode, action, mods ->
@@ -74,5 +76,9 @@ object Colors_1: IShader2, ILesson, ITexture, IMouseCb, IScrollCb {
     }
     override val scrollCb = GLFWScrollCallbackI { window, xoffset, yoffset ->
         camera.processMouseScroll(yoffset.toFloat())
+    }
+
+    override fun postInit() {
+
     }
 }

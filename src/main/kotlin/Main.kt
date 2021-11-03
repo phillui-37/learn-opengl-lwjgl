@@ -6,8 +6,7 @@ import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
 import start_1.*
 
-enum class Lesson(val lesson: ILesson) {
-    // Getting started
+enum class Start1(val lesson: ILesson) {
     HELLO_WINDOW(HelloWindow_3),
     HELLO_TRIANGLE(HelloTriangle_4),
     HELLO_RECTANGLE(HelloRectangle_4),
@@ -21,9 +20,13 @@ enum class Lesson(val lesson: ILesson) {
     CAMERA_EX(Camera_Keyboard_Ex_9),
 }
 
+enum class Light2(val lesson: ILesson) {
+
+}
+
 fun main() {
     println("LWJGL ${Version.getVersion()}\nDir: ${System.getProperty("user.dir")}")
-    val lesson = Lesson.CAMERA_EX.lesson
+    val lesson = Start1.CAMERA_EX.lesson
 
     // init
     lesson.window = CommonUtil.commonInit(lesson.width, lesson.height)
