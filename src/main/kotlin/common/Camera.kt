@@ -12,7 +12,7 @@ class Camera {
     companion object {
         private const val YAW = -90f
         private const val PITCH = 0f
-        private const val SPEED = 25f
+        private const val SPEED = 250f
         private const val SENSITIVITY = .1f
         private const val ZOOM = 45f
 
