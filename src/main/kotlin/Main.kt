@@ -3,6 +3,7 @@ import common.Shader
 import common.trait.*
 import light_2.BasicLight_2
 import light_2.Colors_1
+import light_2.Materials_3
 import org.lwjgl.Version
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
@@ -24,12 +25,13 @@ enum class Start1(val lesson: ILesson) {
 
 enum class Light2(val lesson: ILesson) {
     COLORS(Colors_1),
-    BASIC_LIGHT(BasicLight_2)
+    BASIC_LIGHT(BasicLight_2),
+    MATERIALS(Materials_3),
 }
 
 fun main() {
     println("LWJGL ${Version.getVersion()}\nDir: ${System.getProperty("user.dir")}")
-    val lesson = Light2.BASIC_LIGHT.lesson
+    val lesson = Light2.MATERIALS.lesson
 
     // init
     lesson.window = CommonUtil.commonInit(lesson.width, lesson.height)
