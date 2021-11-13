@@ -3,14 +3,20 @@ package common
 import common.trait.InitBufferResult
 import common.trait.getFragmentShaderContent
 import common.trait.getVertexShaderContent
+import fp.notNull
 import fp.tryNotNull
+import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
+import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.glDeleteVertexArrays
+import org.lwjgl.opengl.GL30.glGenerateMipmap
 import org.lwjgl.opengl.GLUtil
+import org.lwjgl.stb.STBImage
+import org.lwjgl.stb.STBImage.*
 import org.lwjgl.system.MemoryUtil.NULL
 import java.nio.ByteBuffer
 
@@ -115,5 +121,35 @@ object CommonUtil {
             it.VBO.consume(::glDeleteBuffers)
             it.EBO.consume(::glDeleteBuffers)
         }
+    }
+
+    fun loadTexture(path: String): Int {
+        val textureIdBuffer = BufferUtils.createIntBuffer(1)
+        glGenTextures(textureIdBuffer)
+        val textureId = textureIdBuffer.get()
+        stbi_set_flip_vertically_on_load(true)
+
+        val width = BufferUtils.createIntBuffer(1)
+        val height = BufferUtils.createIntBuffer(1)
+        val nrComponents = BufferUtils.createIntBuffer(1)
+        val data = stbi_load(path, width, height, nrComponents, 0)
+        data.notNull {
+            val format = when (val n = nrComponents.get()) {
+                1 -> GL_RED
+                3 -> GL_RGB
+                4 -> GL_RGBA
+                else -> throw RuntimeException("Invalid nrComponents value $n")
+            }
+            glBindTexture(GL_TEXTURE_2D, textureId)
+            GL11.glTexImage2D(GL_TEXTURE_2D, 0, format, width.get(), height.get(), 0, format, GL_UNSIGNED_BYTE, it)
+            glGenerateMipmap(GL_TEXTURE_2D)
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        }
+        stbi_image_free(data)
+        return textureId
     }
 }
