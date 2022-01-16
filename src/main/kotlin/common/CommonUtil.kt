@@ -99,7 +99,7 @@ object CommonUtil {
         val success = IntArray(1)
         glGetShaderiv(vertShader, GL_COMPILE_STATUS, success)
         if(success[0] != GL_TRUE)
-            throw RuntimeException("VERTEX_SHADER::COMPILE::FAIL")
+            throw RuntimeException("VERTEX_SHADER::COMPILE::FAIL, code: ${success[0]}")
         return vertShader
     }
 
@@ -111,7 +111,7 @@ object CommonUtil {
         val success = IntArray(1)
         glGetShaderiv(fragShader, GL_COMPILE_STATUS, success)
         if (success[0] != GL_TRUE)
-            throw RuntimeException("FRAGMENT_SHADER::COMPILE::FAIL")
+            throw RuntimeException("FRAGMENT_SHADER::COMPILE::FAIL, code: ${success[0]}")
         return fragShader
     }
 
