@@ -30,11 +30,12 @@ enum class Light2(val lesson: ILesson) {
     LIGHTING_CASTER_POINT_LIGHT(LightingCasters_5_2),
     LIGHTING_CASTER_SPOTLIGHT(LightingCasters_5_3),
     LIGHTING_CASTER_SPOTLIGHT_OUTER(LightingCasters_5_4),
+    MULTIPLE_LIGHTS(MultipleLights_1),
 }
 
 fun main() {
     println("LWJGL ${Version.getVersion()}\nDir: ${System.getProperty("user.dir")}")
-    val lesson = Light2.LIGHTING_CASTER_SPOTLIGHT_OUTER.lesson
+    val lesson = Light2.MULTIPLE_LIGHTS.lesson
 
     // init
     lesson.window = CommonUtil.commonInit(lesson.width, lesson.height)
