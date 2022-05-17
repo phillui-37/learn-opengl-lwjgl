@@ -6,21 +6,15 @@ import common.Shader
 import common.trait.*
 import fp.TMaybe
 import fp.TMaybe.Companion.maybe
-import fp.TNone
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWKeyCallbackI
-import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL15.glGenBuffers
-import org.lwjgl.opengl.GL20
-import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.stb.STBImage.*
 import org.lwjgl.system.MemoryUtil.NULL
 
-object Texture2_6: IShader, ILesson {
+object Texture2_6: IShader, ILesson, ILessonCleanUp {
     override val width: Int = DefaultValue.WIDTH
     override val height: Int = DefaultValue.HEIGHT
     override val keyCb: GLFWKeyCallbackI = DefaultValue.KEYBOARD_CALLBACK

@@ -7,23 +7,19 @@ import common.trait.*
 import fp.TMaybe
 import fp.TMaybe.Companion.maybe
 import org.joml.Matrix4f
-import org.joml.Matrix4fc
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWKeyCallbackI
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL13.GL_TEXTURE0
 import org.lwjgl.opengl.GL13.GL_TEXTURE1
-import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.stb.STBImage
 import org.lwjgl.stb.STBImage.stbi_image_free
 import org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load
 import org.lwjgl.system.MemoryUtil.NULL
 
-object Transformation_7: IShader, ILesson {
+object Transformation_7: IShader, ILesson, ILessonCleanUp {
     override val width: Int = DefaultValue.WIDTH
     override val height: Int = DefaultValue.HEIGHT
     override val keyCb: GLFWKeyCallbackI = DefaultValue.KEYBOARD_CALLBACK

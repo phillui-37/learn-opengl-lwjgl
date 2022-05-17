@@ -24,7 +24,7 @@ import org.lwjgl.system.MemoryUtil.NULL
 import kotlin.math.cos
 import kotlin.math.sin
 
-object Camera_9: IShader3, ILesson, ITexture, ILessonPostInit {
+object Camera_9: IShader3, ILesson, ITexture, ILessonPostInit, ILessonCleanUp {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
     override val keyCb = DefaultValue.KEYBOARD_CALLBACK

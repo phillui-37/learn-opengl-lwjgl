@@ -13,7 +13,6 @@ interface IShader {
     var shaders: Array<ShaderRef>
     var indices: TMaybe<IntArray>
     fun initBuffers(): Array<InitBufferResult>
-    fun cleanUp()
 }
 
 data class InitBufferResult(

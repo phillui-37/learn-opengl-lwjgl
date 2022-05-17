@@ -1,21 +1,22 @@
 package start_1
 
+import common.CommonUtil
 import common.CommonUtil.delBuffer
 import common.CommonUtil.initFragmentShader
 import common.CommonUtil.initVertexShader
-import common.*
+import common.DefaultValue
+import common.Shader
 import common.trait.*
 import fp.TMaybe
 import fp.TMaybe.Companion.maybe
 import fp.TNone
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL20.*
-import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.glBindVertexArray
 import org.lwjgl.opengl.GL30.glGenVertexArrays
 import org.lwjgl.system.MemoryUtil.NULL
 
-object ColorTriangle_5: IShader3, ILesson, ILessonPostInit {
+object ColorTriangle_5: IShader3, ILesson, ILessonPostInit, ILessonCleanUp {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
     override val keyCb = DefaultValue.KEYBOARD_CALLBACK

@@ -2,6 +2,7 @@ import common.CommonUtil
 import common.Shader
 import common.trait.*
 import light_2.*
+import model_loading_3.Model_1
 import org.lwjgl.Version
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
 import org.lwjgl.glfw.GLFW.*
@@ -33,9 +34,13 @@ enum class Light2(val lesson: ILesson) {
     MULTIPLE_LIGHTS(MultipleLights_1),
 }
 
+enum class ModelLoading3(val lesson: ILesson) {
+    Model(Model_1)
+}
+
 fun main() {
     println("LWJGL ${Version.getVersion()}\nDir: ${System.getProperty("user.dir")}")
-    val lesson = Light2.MULTIPLE_LIGHTS.lesson
+    val lesson = ModelLoading3.Model.lesson
 
     // init
     lesson.window = CommonUtil.commonInit(lesson.width, lesson.height)
@@ -51,7 +56,7 @@ fun main() {
 
     // loop
     lesson.loop()
-    if (lesson is IShader)
+    if (lesson is ILessonCleanUp)
         lesson.cleanUp()
 
     glfwFreeCallbacks(lesson.window)

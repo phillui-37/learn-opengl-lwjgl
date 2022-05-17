@@ -26,7 +26,7 @@ import org.lwjgl.opengl.GL30
 import org.lwjgl.stb.STBImage
 import org.lwjgl.system.MemoryUtil.NULL
 
-object Camera_Keyboard_9 : IShader3, ILesson, ITexture, IMouseCb,IScrollCb,ILessonPostInit {
+object Camera_Keyboard_9 : IShader3, ILesson, ITexture, IMouseCb,IScrollCb,ILessonPostInit, ILessonCleanUp {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
     override val keyCb = GLFWKeyCallbackI { window, key, scancode, action, mods ->

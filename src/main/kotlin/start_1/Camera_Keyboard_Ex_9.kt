@@ -7,10 +7,9 @@ import fp.TMaybe.Companion.maybe
 import fp.TNone
 import fp.curry2
 import org.joml.Math
-import org.joml.Math.*
+import org.joml.Math.toRadians
 import org.joml.Matrix4f
 import org.joml.Vector3f
-import org.joml.Vector4f
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.*
@@ -26,7 +25,7 @@ import org.lwjgl.opengl.GL30
 import org.lwjgl.stb.STBImage
 import org.lwjgl.system.MemoryUtil.NULL
 
-object Camera_Keyboard_Ex_9 : IShader3, ILesson, ITexture, IMouseCb, IScrollCb, ILessonPostInit {
+object Camera_Keyboard_Ex_9 : IShader3, ILesson, ITexture, IMouseCb, IScrollCb, ILessonPostInit, ILessonCleanUp {
     override val width = DefaultValue.WIDTH
     override val height = DefaultValue.HEIGHT
     override val keyCb = GLFWKeyCallbackI { window, key, scancode, action, mods ->

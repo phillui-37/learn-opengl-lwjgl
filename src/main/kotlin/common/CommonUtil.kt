@@ -4,20 +4,18 @@ import common.trait.InitBufferResult
 import common.trait.getFragmentShaderContent
 import common.trait.getVertexShaderContent
 import fp.notNull
-import fp.tryNotNull
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL20.*
-import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL30.glDeleteVertexArrays
 import org.lwjgl.opengl.GL30.glGenerateMipmap
 import org.lwjgl.opengl.GLUtil
-import org.lwjgl.stb.STBImage
 import org.lwjgl.stb.STBImage.*
 import org.lwjgl.system.MemoryUtil.NULL
+import org.lwjgl.system.Platform
 import java.nio.ByteBuffer
 
 object CommonUtil {
@@ -55,7 +53,7 @@ object CommonUtil {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
-        if (System.getProperty("os.name").lowercase().contains("mac")) {
+        if (Platform.get() == Platform.MACOSX) {
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
         }
 

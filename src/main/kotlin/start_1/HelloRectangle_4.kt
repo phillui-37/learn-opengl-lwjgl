@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.system.MemoryUtil.NULL
 
-object HelloRectangle_4: IShader, ILesson {
+object HelloRectangle_4: IShader, ILesson, ILessonCleanUp {
     override val width = 1024
     override val height = 768
     override val keyCb = GLFWKeyCallbackI { window, key, scancode, action, mods ->

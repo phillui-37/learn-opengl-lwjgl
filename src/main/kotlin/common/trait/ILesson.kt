@@ -16,3 +16,7 @@ interface ILesson {
 interface ILessonPostInit {
     fun postInit()
 }
+
+interface ILessonCleanUp {
+    fun cleanUp()
+}

@@ -1,19 +1,25 @@
 package light_2
 
-import common.trait.*
 import common.*
-import fp.*
+import common.trait.*
+import fp.TMaybe
 import fp.TMaybe.Companion.maybe
-import org.lwjgl.glfw.*
-import org.lwjgl.opengl.*
-import org.lwjgl.system.MemoryUtil.NULL
-import org.joml.*
+import fp.TNone
+import fp.curry2
 import org.joml.Math.toRadians
+import org.joml.Matrix4f
+import org.joml.Vector3f
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.*
-import start_1.Camera_Keyboard_Ex_9
+import org.lwjgl.glfw.GLFWCursorPosCallbackI
+import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
+import org.lwjgl.glfw.GLFWKeyCallbackI
+import org.lwjgl.glfw.GLFWScrollCallbackI
+import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL30
+import org.lwjgl.system.MemoryUtil.NULL
 
-object Colors_1 : IShader3, ILesson, IMouseCb, IScrollCb, ILessonPostInit {
+object Colors_1 : IShader3, ILesson, IMouseCb, IScrollCb, ILessonPostInit, ILessonCleanUp {
     override val width: Int = DefaultValue.WIDTH
     override val height: Int = DefaultValue.HEIGHT
     var lastFrame = 0f
